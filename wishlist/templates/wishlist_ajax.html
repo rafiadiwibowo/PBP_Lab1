@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+        <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+      </head>
+      <body>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+      </body>
+    </html>
+
+<nav class="navbar bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand">{{nama}}</a>
+        <a class="btn btn-danger" href="{% url 'wishlist:logout' %}" role="button" >Logout</a>
+        <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+    </nav>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+    $("tr.datatable").html('');
+    $.get('/wishlist/json', function (data) {
+        data.map((singleData) =>
+        $("table").append(`<tr class="datatable">
+        <td>${singleData.fields.nama_barang}</td>
+        <td>${singleData.fields.harga_barang}</td>
+        <td>${singleData.fields.deskripsi}</td>
+        </tr>`)
+        );
+      });
+    });
+});
+</script>
+<button>Get JSON data</button>
+<div class="data">
+  <table class="table table-hover">
+    <th>Nama Barang</th>
+    <th>Harga Barang</th>
+    <th>Deskripsi</th>
+  </table>
+</div>
+
+<div class="text-center">
+    <div><h5>Sesi terakhir login: {{ last_login }}</h5></div>
+</div>
+
+<div class = "login">
+
+  <h1>Create Task</h1>
+
+      <form method="POST" >
+          {% csrf_token %}
+          <table>
+              <tr>
+                  <td>Nama Barang: </td>
+                  <td>{{form.nama_barang}}</td>
+              </tr>
+
+              <tr>
+                  <td>Harga Barang: </td>
+                  <td>{{form.harga_barang}}</td>
+              </tr>
+
+              <tr>
+                <td>Deskripsi: </td>
+                <td>{{form.deskripsi}}</td>
+              </tr>
+              <tr>
+                  <td></td>
+                  <td><input type="submit" name="submit" value="Submit"/></td>
+              </tr>
+          </table>
+      </form>
+
+  {% if messages %}
+      <ul>
+          {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+      </ul>
+  {% endif %}
+{% endblock content %}
