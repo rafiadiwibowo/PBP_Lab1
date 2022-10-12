@@ -26,12 +26,13 @@ def show_wishlist(request):
 
 @login_required(login_url='/wishlist/login/')   
 def show_ajax_wishlist(request):
-    data_barang_wishlist = BarangWishlist.objects.all()
-    context = {
-    'list_barang': data_barang_wishlist,
-    'nama': 'Muhammad Rafi Adiwibowo',
-    'last_login' : request.COOKIES['last_login'],
-    }
+    if request.method == "POST":
+        nama_barang = request.POST.get("nama_barang")
+        harga_barang = request.POST.get("harga_barang")
+        deskripsi = request.POST.get("deskripsi")
+        item = BarangWishlist.objects.create(nama_barang = nama_barang, harga_barang = harga_barang, deskripsi = deskripsi)
+        item.save()
+        context = {}
     return render(request, "wishlist_ajax.html", context)
 
 def wishlist_xml(request):
@@ -97,4 +98,4 @@ def create_wishlist(request):
         form = FormTask()
 
     context = {'form':form}
-    return render(request, 'wishlist_ajax.html', context) 
+    return render(request, 'wishlist_ajax.html', context)     

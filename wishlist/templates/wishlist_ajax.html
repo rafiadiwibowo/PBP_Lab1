@@ -44,8 +44,24 @@ $(document).ready(function(){
       });
     });
 });
+
+$(document).ready( function() {
+    additem();
+    $(".additem").click(function() {
+        $.post(
+            "/wishlist/ajax/", {
+            nama_barang: document.getElementById('nama_barang').value,
+            harga_barang: document.getElementById('harga_barang').value,
+            deskripsi: document.getElementById('deskripsi').value,
+            }, 
+            function(_){
+                getJSON();
+            });
+    });
+});
+
 </script>
-<button>Get JSON data</button>
+
 <div class="data">
   <table class="table table-hover">
     <th>Nama Barang</th>
@@ -55,42 +71,20 @@ $(document).ready(function(){
 </div>
 
 <div class="text-center">
-    <div><h5>Sesi terakhir login: {{ last_login }}</h5></div>
+  <form method="POST">
+    {% csrf_token %}
+    <p>Nama Barang</p>
+    <input type="text" id="nama_barang" name="nama_barang">
+    <p>Harga Barang</p>
+    <input type="text" id="harga_barang" name="harga_barang">
+    <p>Deskripsi</p>
+    <input type="text" id="deskripsi" name="deskripsi">
+    <br>
+    <button type="submit" name="submit" value="create">Add Item</button>
+  </form>
+  <button>Get JSON data</button>
 </div>
 
-<div class = "login">
 
-  <h1>Create Task</h1>
 
-      <form method="POST" >
-          {% csrf_token %}
-          <table>
-              <tr>
-                  <td>Nama Barang: </td>
-                  <td>{{form.nama_barang}}</td>
-              </tr>
-
-              <tr>
-                  <td>Harga Barang: </td>
-                  <td>{{form.harga_barang}}</td>
-              </tr>
-
-              <tr>
-                <td>Deskripsi: </td>
-                <td>{{form.deskripsi}}</td>
-              </tr>
-              <tr>
-                  <td></td>
-                  <td><input type="submit" name="submit" value="Submit"/></td>
-              </tr>
-          </table>
-      </form>
-
-  {% if messages %}
-      <ul>
-          {% for message in messages %}
-              <li>{{ message }}</li>
-              {% endfor %}
-      </ul>
-  {% endif %}
 {% endblock content %}
